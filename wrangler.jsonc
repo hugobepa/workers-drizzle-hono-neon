@@ -6,13 +6,11 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "workers-drizzle-hono-neon",
 	"main": "src/index.ts",
-	"compatibility_date": "2026-02-12",
+	"compatibility_date": "2024-01-01",
 	"observability": {
-		"enabled": true
+		"enabled": true,
 	},
-	"compatibility_flags": [
-		"nodejs_compat"
-	]
+	"compatibility_flags": ["nodejs_compat"],
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
