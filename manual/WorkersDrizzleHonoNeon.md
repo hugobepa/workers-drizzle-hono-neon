@@ -3,9 +3,9 @@
 - [Cloudflare Workers, Drizzle ORM, Hono & Neon 19m](https://www.youtube.com/watch?v=YNtwaUVtvh0)
 - [mas completo con seed](https://bun.com/docs/guides/ecosystem/neon-drizzle) 
 - [githubVideo](https://github.com/neondatabase/cloudflare-drizzle-neon)
-C:\Users\User\Documents\programacion2025\librerias\drizzle
-C:\Users\User\Documents\programacion2025\InstrucionesBasicasProgramar2025\manual_ejemplos
-workers-drizzle-hono-neon
+- C:\Users\User\Documents\programacion2025\librerias\drizzle
+- C:\Users\User\Documents\programacion2025\InstrucionesBasicasProgramar2025\manual_ejemplos
+- workers-drizzle-hono-neon
 
 
 # WorkersDrizzleHonoNeon
@@ -162,10 +162,85 @@ export default defineConfig({
      - opcion 1,T: bunx drizzle-kit migrate
 	 - opcion 2,T: bunx drizzle-kit push 
 	 - opcion 3,T: bunx drizzle-kit push --config=drizzle-dev.drizzle.config
+	 
+### test DB
+- [neon](https://neon.com/)
+0. insertar prueba, Neon web -- project -- sql editor -- RUN 
+`````
+INSERT INTO products (name,price,description) VALUES
+('Product A',10.99,'this is description for Product A.'),
+('Product B',20.99,'this is description for Product B.'),
+('Product C',30.99,'this is description for Product C.'),
+('Product D',40.99,'this is description for Product D.'),
+('Product E',50.99,'this is description for Product E.'),
+('Product F',20.99,'this is description for Product F.'),
+('Product G',30.99,'this is description for Product G.');
+`````
+1. comprobar en Neon web -- project -- tables
+1. OPCIONAL, ver DB browse: bunx drizzle-kit studio	 
+2. modificar `src\index.ts`:
+	- configuramos VE `const db = drizzle(c.env.DATABASE_URL);`
+	- mostramos todos los productos `	const allProducts = await db.select().from(products);`
+````
+import { drizzle } from 'drizzle-orm/neon-serverless';
+import { products } from './db/schema';
+import { Hono } from 'hono';
+
+export type Env = {
+	DATABASE_URL: string;
+};
+
+const app = new Hono<{ Bindings: Env }>();
+
+app.get('/', async (c) => {
+	c.env.DATABASE_URL;
+	const db = drizzle(c.env.DATABASE_URL);
+	const allProducts = await db.select().from(products);
+	return c.json({ message: 'Hello, World!', products: allProducts });
+});
+
+export default app;
+
+````
+3. comprobar intalacion Hono,T1: bun run dev 
+     -T2: curl http://127.0.0.1:8787	 
+
+### deploy worker production
+
+0. logeamos,T: bun wrangler login
+	- `Successfully logged in.`
+1. deploy,T: bun run deploy
+	- https://workers-drizzle-hono-neon.hugo-ber-par.workers.dev/
+		- Internal error server
+		- [webCloudflare](https://www.cloudflare.com/es-es/) 
+			- dashboard -- project -- settings -- variables and secret -- add
+			 - secret -- DATABASE_URL -- `postgresql://xxx:xxxx@ep-xxxx-feather-xxx-pooler...` -- add variable
+			 - deploy   
+			 `Update your wrangler config file with changes to keep your local development environment in sync`
+			 - Project, add variables no datos sensisbles `wrangler.josnc`:
+			 ````
+			 "vars": {
+		"MY_VAR": "VALUE_VARIABLE",
+				},
+			 ````
+			 - Project VE sensibles,T: bun wrangler secret put DATABASE_URL
+				- Enter a secret value: `postgresql://xxx:xxxx@ep-xxxx-feather-xxx-pooler...`
+					- ✨ Success! Uploaded secret DATABASE_URL
+					- se guarda nube como secreta
+    - Project -- github - commit (poner algo en commit) - asyn change 
+	- [webCloudflare](https://www.cloudflare.com/es-es/) 
+		- dashboard -- project -- settings -- build --  git repository -- connect
+			- escoger nombreCuenta -- repository -- rama -- connect
+			   - variable and secret `+`:
+					- name : DATABASE_URL
+					- value: postgresql://xxx:xxxx@ep-xxxx-feather-xxx-pooler...
+					- encrypt
+					- save
+## recursos	 
 [13 min](https://www.youtube.com/watch?v=YNtwaUVtvh0)
 [neon](https://neon.com/)
 [githubVideo](https://github.com/neondatabase/cloudflare-drizzle-neon/blob/main/src/db/schema.ts)	 
-0. OPCIONAL, ver DB browse: bunx drizzle-kit studio
+
 
 
 
