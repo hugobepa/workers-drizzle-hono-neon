@@ -220,11 +220,9 @@ export default app;
 0. logeamos,T: bun wrangler login
    - `Successfully logged in.`
 1. deploy,T: bun run deploy
-   - https://workers-drizzle-hono-neon.hugo-ber-par.workers.dev/
-     - Internal error server
-     - [webCloudflare](https://www.cloudflare.com/es-es/) - dashboard -- project -- settings -- variables and secret -- add - secret -- DATABASE_URL -- `postgresql://xxx:xxxx@ep-xxxx-feather-xxx-pooler...` -- add variable - deploy  
-        `Update your wrangler config file with changes to keep your local development environment in sync` - Project, add variables no datos sensisbles `wrangler.josnc`:
-       `	 "vars": {
+   - https://workers-drizzle-hono-neon.hugo-ber-par.workers.dev/ - Internal error server - [webCloudflare](https://www.cloudflare.com/es-es/) - dashboard -- project -- settings -- variables and secret -- add - secret -- DATABASE_URL -- `postgresql://xxx:xxxx@ep-xxxx-feather-xxx-pooler...` -- add variable - deploy  
+      `Update your wrangler config file with changes to keep your local development environment in sync` - Project, add variables no datos sensisbles `wrangler.josnc`:
+     `	 "vars": {
 "MY_VAR": "VALUE_VARIABLE",
 		},
 	` - Project VE sensibles,T: bun wrangler secret put DATABASE_URL - Enter a secret value: `postgresql://xxx:xxxx@ep-xxxx-feather-xxx-pooler...` - ✨ Success! Uploaded secret DATABASE_URL - se guarda nube como secreta
@@ -243,3 +241,5 @@ export default app;
 [13 min](https://www.youtube.com/watch?v=YNtwaUVtvh0)
 [neon](https://neon.com/)
 [githubVideo](https://github.com/neondatabase/cloudflare-drizzle-neon/blob/main/src/db/schema.ts)
+
+a
