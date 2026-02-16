@@ -15,6 +15,7 @@ export const products = pgTable('products', {
 export const posts = pgTable('posts', {
 	id: uuid('id').defaultRandom().primaryKey(),
 	authorId: uuid('authorId').notNull(),
+	authorName: varchar('authorName', { length: 256 }).notNull(),
 	title: varchar('title', { length: 256 }).notNull(),
 	content: varchar('content', { length: 256 }).notNull(),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -22,8 +23,8 @@ export const posts = pgTable('posts', {
 
 export const postsRelations = relations(posts, ({ one }) => ({
 	author: one(users, {
-		fields: [posts.authorId],
-		references: [users.id],
+		fields: [posts.authorId, posts.authorName],
+		references: [users.id, users.name],
 	}),
 }));
 

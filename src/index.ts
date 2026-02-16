@@ -14,6 +14,7 @@ app.get('/', async (c) => {
 	//const sql = neon(c.env.DATABASE_URL);
 	const db = drizzle(c.env.DATABASE_URL);
 	const allProducts = await db.select().from(products);
+	//const allPosts = await db.select().from(posts);
 	const allPosts = await db.select().from(posts);
 	return c.json({ message: 'Hello, World!', products: allProducts, posts: allPosts });
 });

@@ -45,11 +45,16 @@ const main = async () => {
 		]);
 
 		await db.insert(schema.posts).values([
-			{ title: 'Like the video', content: 'helps the channel', authorId: 'f47ac10b-58cc-4372-a567-0e02b2c3d479' },
-			{ title: 'Subscribe', content: "so you don't miss updates", authorId: 'f47ac10b-58cc-4372-a567-0e02b2c3d479' },
-			{ title: 'Great post', content: 'very helpful info', authorId: '9c858901-8a57-4791-81fe-4c455b099bc9' },
-			{ title: 'Question', content: 'Can you explain more?', authorId: '9c858901-8a57-4791-81fe-4c455b099bc9' },
-			{ title: 'Thanks', content: 'appreciate the tutorial', authorId: '9c858901-8a57-4791-81fe-4c455b099bc9' },
+			{ title: 'Like the video', content: 'helps the channel', authorName: 'John Doe', authorId: 'f47ac10b-58cc-4372-a567-0e02b2c3d479' },
+			{
+				title: 'Subscribe',
+				content: "so you don't miss updates",
+				authorName: 'John Doe',
+				authorId: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+			},
+			{ title: 'Great post', content: 'very helpful info', authorName: 'Jane Doe', authorId: '9c858901-8a57-4791-81fe-4c455b099bc9' },
+			{ title: 'Question', content: 'Can you explain more?', authorName: 'Jane Doe', authorId: '9c858901-8a57-4791-81fe-4c455b099bc9' },
+			{ title: 'Thanks', content: 'appreciate the tutorial', authorName: 'Jane Doe', authorId: '9c858901-8a57-4791-81fe-4c455b099bc9' },
 		]);
 
 		console.log('Database seeded successfully');
