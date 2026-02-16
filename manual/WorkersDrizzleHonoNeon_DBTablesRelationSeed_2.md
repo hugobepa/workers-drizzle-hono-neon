@@ -3,7 +3,7 @@
 - [githubFinal](https://github.com/cdbrw/drizzle-orm-demo)
 - [docDrizzle](https://orm.drizzle.team/docs/overview)
 - [bunDrizzleOficial](https://bun.com/docs/guides/ecosystem/drizzle)
-- [mas completo con seed](https://bun.com/docs/guides/ecosystem/neon-drizzle) 
+- [mas completo con seed](https://bun.com/docs/guides/ecosystem/neon-drizzle)
 - [solucionCaseraSeed](https://github.com/drizzle-team/drizzle-orm/discussions/3906#discussioncomment-13908792)
 - [neon](https://neon.com/)
 - [webCloudflare](https://www.cloudflare.com/es-es/)
@@ -12,18 +12,17 @@
 - workers-drizzle-hono-neon
 - starterDrizzle L145
 
-
 # WorkersDrizzleHonoNeonDBRelationSeed
 
 ## zod
 
-0. install zod drizzle,T: bun add install drizzle-zod 
+0. install zod drizzle,T: bun add install drizzle-zod
 
 ### crear tabla post y seed
 
 1. añadir esquema post `src\db\schema.ts`:
 
-````
+```
 import { pgTable, serial, text, doublePrecision, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
@@ -42,25 +41,23 @@ export const insertPostSchema = createInsertSchema(posts);
 
 export type Post = InferSelectModel<typeof posts>;
 export type NewPost = InferInsertModel<typeof posts>;
-````
+```
 
 2. creamos la migracion,T: bunx drizzle-kit generate
-	-  drizzle\20260216091200_simple_spot.sql 
-	- add a todos los archivos `drizzle\xxxx.sql` al principio de el: `CREATE SCHEMA IF NOT EXISTS "drizzle";`
+   - drizzle\20260216091200_simple_spot.sql
+   - add a todos los archivos `drizzle\xxxx.sql` al principio de el: `CREATE SCHEMA IF NOT EXISTS "drizzle";`
 3. crea tabla en DB:
-	 - sino la DB esta vacia: bun drizzle-kit migrate
-	 - si la DB ya tiene tablas: bun drizzle-kit push
-4. comprobar la gestion, abrir studio,T: bunx drizzle-kit studio
-		- https://local.drizzle.studio/
-		
+   - sino la DB esta vacia: bun drizzle-kit migrate
+   - si la DB ya tiene tablas: bun drizzle-kit push
+4. comprobar la gestion, abrir studio,T: bunx drizzle-kit studio - https://local.drizzle.studio/
 5. modificamos `src\db\seed.ts` para `post`:
 
 - llamamos tabla: `const db = drizzle(sql, { schema: { products, posts: schema.posts,},});`
 - eliminamos datos anteriores de tabla: `await db.delete(schema.posts);`
-- insertamos nuevos datos: 
-`await db.insert(schema.posts).values([{ title: 'Like the video', content: 'helps the channel' },...]);`
+- insertamos nuevos datos:
+  `await db.insert(schema.posts).values([{ title: 'Like the video', content: 'helps the channel' },...]);`
 
-````
+```
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from './schema';
@@ -104,50 +101,58 @@ const main = async () => {
 };
 main();
 
-````
+```
 
 6. insertar datos en DB,T: bun run db:seed
 7. comprobar insercion,T: visionamos los cambios,T: bunx drizzle-kit studio
-	- https://local.drizzle.studio		
+   - https://local.drizzle.studio
 
 ### crear tabla user, relacions post y seed
 
 0. añadimos tabla user y relaciones `./src/db/schema.ts`:
 
-- creamos tabla user: 
-````
+- creamos tabla user:
+
+```
 	export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: varchar('name', { length: 256 }).notNull(),
 });
-````
+```
+
 - crearamos funciones para trabajar con la tabla:
-````
+
+```
 export const insertUserSchema = createInsertSchema(users);
 
 export type User = InferSelectModel<typeof users>;
 export type NewUser = InferInsertModel<typeof users>;
-````
-- creamos campo en `post`: `export const posts = pgTable('posts', { ..., authorId: uuid('authorId').notNull(),` 
+```
+
+- creamos campo en `post`: `export const posts = pgTable('posts', { ..., authorId: uuid('authorId').notNull(),`
 
 - creamos de 1 a 1 :
- ````
- export const postsRelations = relations(posts, ({ one }) => ({
-  author: one(users, {
-    fields: [posts.authorId],
-    references: [users.id],
-  }),
+
+```
+export const postsRelations = relations(posts, ({ one }) => ({
+ author: one(users, {
+   fields: [posts.authorId],
+   references: [users.id],
+ }),
 }));
- ````
+```
+
 -creamos relacion de muchos a muchos:
 
-````
+```
 export const usersRelations = relations(users, ({ many }) => ({
   posts: many(posts),
 }));
-````
-- ARCHIVO: 
-````
+```
+
+- ARCHIVO:
+
+```
 import { relations } from 'drizzle-orm';
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
@@ -155,7 +160,7 @@ import { createInsertSchema } from 'drizzle-zod';
 
 export const posts = pgTable('posts', {
   id: uuid('id').defaultRandom().primaryKey(),
-  authorId: uuid('authorId').notNull(), 
+  authorId: uuid('authorId').notNull(),
   title: varchar('title', { length: 256 }).notNull(),
   content: varchar('content', { length: 256 }).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -186,29 +191,25 @@ export const insertUserSchema = createInsertSchema(users);
 
 export type User = InferSelectModel<typeof users>;
 export type NewUser = InferInsertModel<typeof users>;
-````
+```
 
 1. creamos la migracion,T: bunx drizzle-kit generate
-	-  drizzle\20260216102509_rare_natasha_romanoff.sql 
-	- add a todos los archivos `drizzle\xxxx.sql` al principio de el: `CREATE SCHEMA IF NOT EXISTS "drizzle";`
+   - drizzle\20260216102509_rare_natasha_romanoff.sql
+   - add a todos los archivos `drizzle\xxxx.sql` al principio de el: `CREATE SCHEMA IF NOT EXISTS "drizzle";`
 2. crea tabla en DB:
-	 - sino la DB esta vacia: bun drizzle-kit migrate
-	 - si la DB ya tiene tablas: bun drizzle-kit push
-3. comprobar la gestion, abrir studio,T: bunx drizzle-kit studio
-		- https://local.drizzle.studio/
-4 . añadimos `user` a `src/db/seed`:
-	- importamos y llamamos DB: `const db = drizzle(sql, {schema: { ...,users: schema.users,},`
-	- eliminaos users de la DB: `await db.delete(schema.users);`
-	- creamos users en tabla: `await db.insert(schema.users).values([{ id: '1-2-3-4-6', name: 'John Doe' },...`
-	- insertamos user en post:
-	````
+   - sino la DB esta vacia: bun drizzle-kit migrate
+   - si la DB ya tiene tablas: bun drizzle-kit push
+3. comprobar la gestion, abrir studio,T: bunx drizzle-kit studio - https://local.drizzle.studio/
+   4 . añadimos `user` a `src/db/seed`: - importamos y llamamos DB: `const db = drizzle(sql, {schema: { ...,users: schema.users,},` - eliminaos users de la DB: `await db.delete(schema.users);` - creamos users en tabla: `await db.insert(schema.users).values([{ id: '1-2-3-4-6', name: 'John Doe' },...` - insertamos user en post:
+   `
 	await db.insert(schema.posts).values([
 	{ title: 'Like the video', content: 'helps the channel', authorId: '1-2-3-4-6'},
 	...
-	````
-- ARCHIVO: 
+	`
 
-````
+- ARCHIVO:
+
+```
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from './schema';
@@ -271,17 +272,18 @@ const main = async () => {
 };
 main();
 
-````
+```
 
 6. insertar datos en DB,T: bun run db:seed
 7. comprobar insercion,T: visionamos los cambios,T: bunx drizzle-kit studio
-	- https://local.drizzle.studio		
+   - https://local.drizzle.studio
 
 ### visualizar en pagina
 
 0. modificar `src\index.ts`:
-	- mostramos todos los productos `	const allPosts = await db.select().from(posts);`
-````
+   - mostramos todos los productos `	const allPosts = await db.select().from(posts);`
+
+```
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { products, posts } from './db/schema';
 import { Hono } from 'hono';
@@ -302,19 +304,19 @@ app.get('/', async (c) => {
 
 export default app;
 
-````
-1. comprobar intalacion localmente Hono,T1: bun run dev 
-     -T2: curl http://127.0.0.1:8787	 
+```
+
+1. comprobar intalacion localmente Hono,T1: bun run dev
+   -T2: curl http://127.0.0.1:8787
 2. webCloudflare -- dashboard -- proyect -- settings -- build -- branchControl (cambiar rama)
 3. subimos cambios a github desde VS x commit y async
-4. visualizamos en web cambios:  https://workers-drizzle-hono-neon.hugo-ber-par.workers.dev/
+4. visualizamos en web cambios: https://workers-drizzle-hono-neon.hugo-ber-par.workers.dev/
 
+## EXTRA 1
 
-## EXTRA 1 
+0. modificamos mostrar nombre author `src/db/schema`:
 
-0. modificamos mostrar nombre author  `src/db/schema`:
-
-````
+```
 // tabla posts
 export const posts = pgTable('posts', {
 	id: uuid('id').defaultRandom().primaryKey(),
@@ -332,28 +334,28 @@ export const postsRelations = relations(posts, ({ one }) => ({
 	}),
 }));
 
-````
+```
 
 1. creamos la migracion,T: bunx drizzle-kit generate
-	-  drizzle\20260216102509_rare_natasha_romanoff.sql 
-	- add a todos los archivos `drizzle\xxxx.sql` al principio de el: `CREATE SCHEMA IF NOT EXISTS "drizzle";`
+   - drizzle\20260216102509_rare_natasha_romanoff.sql
+   - add a todos los archivos `drizzle\xxxx.sql` al principio de el: `CREATE SCHEMA IF NOT EXISTS "drizzle";`
 2. crea tabla en DB:
-	 - sino la DB esta vacia: bun drizzle-kit migrate
-	 - si la DB ya tiene tablas: bun drizzle-kit push
+   - sino la DB esta vacia: bun drizzle-kit migrate
+   - si la DB ya tiene tablas: bun drizzle-kit push
 3. comprobar la gestion, abrir studio,T: bunx drizzle-kit studio
 
-4. modificamos `src/db/seed`: 
-`{ title: 'Great post', content: 'very helpful info', authorName: 'Jane Doe', authorId: '1-2-3-81fe-4' },`
+4. modificamos `src/db/seed`:
+   `{ title: 'Great post', content: 'very helpful info', authorName: 'Jane Doe', authorId: '1-2-3-81fe-4' },`
 
 5. insertar datos en DB,T: bun run db:seed
 6. comprobar insercion,T: visionamos los cambios,T: bunx drizzle-kit studio
-	- https://local.drizzle.studio		
-
+   - https://local.drizzle.studio
 
 ### OPCIONAL NO PROBADO AQUI EJEMPLO CON COMENTARIO EN POST
 
 1. crear archivos de esquema `src/db/schema.ts`:
-````
+
+```
 import { relations } from "drizzle-orm";
 import { serial, text, timestamp, integer, pgTable } from "drizzle-orm/pg-core";
 
@@ -398,14 +400,15 @@ export const commentsRelations = relations(comments, ({ one }) => ({
 	post: one(posts, { fields: [comments.postId], references: [posts.id] }),
 	user: one(users, { fields: [comments.userId], references: [users.id] }),
 }));
-````
+```
+
 2. generar tablas,T : bunx drizzle-kit generate --dialect postgresql --schema ./src/db/schema.ts --out ./drizzle
-	- se crean tablas para migracion `drizzle\0000_numerous_johnny_blaze.sql` 
+   - se crean tablas para migracion `drizzle\0000_numerous_johnny_blaze.sql`
 3. migrar tablas: bunx drizzle-kit migrate ./src/db/migrate.ts
 
-4. crear semillas  `src\db\seed.ts`:
+4. crear semillas `src\db\seed.ts`:
 
-````
+```
 import { comments, posts, users } from "./schema";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
@@ -481,10 +484,11 @@ const main = async () => {
 
 main();
 
-````
+```
+
 5. trabjamos con las DB `src/index.ts`:
 
-````
+```
 import { Hono } from "hono";
 import { db } from "./db";
 
@@ -517,5 +521,6 @@ if (process.env.NODE_ENV === "development") {
 	console.log(`Server is running at http://localhost:${PORT}`);
 }
 
-````
+```
 
+a
