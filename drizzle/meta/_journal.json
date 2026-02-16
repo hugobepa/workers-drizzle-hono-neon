@@ -8,6 +8,20 @@
       "when": 1771005046781,
       "tag": "0000_magical_power_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771233120110,
+      "tag": "20260216091200_simple_spot",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771237509916,
+      "tag": "20260216102509_rare_natasha_romanoff",
+      "breakpoints": true
     }
   ]
 }

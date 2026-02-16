@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool, neon } from '@neondatabase/serverless';
-import { products } from './db/schema';
+import { products, posts } from './db/schema';
 import { Hono } from 'hono';
 
 export type Env = {
@@ -14,7 +14,8 @@ app.get('/', async (c) => {
 	//const sql = neon(c.env.DATABASE_URL);
 	const db = drizzle(c.env.DATABASE_URL);
 	const allProducts = await db.select().from(products);
-	return c.json({ message: 'Hello, World!', products: allProducts });
+	const allPosts = await db.select().from(posts);
+	return c.json({ message: 'Hello, World!', products: allProducts, posts: allPosts });
 });
 
 export default app;
